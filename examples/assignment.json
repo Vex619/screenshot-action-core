@@ -1,0 +1,22 @@
+{
+  "type": "assignment",
+  "confidence": 0.93,
+  "title": "3 — submit by Friday 11:59 PM",
+  "entities": {
+    "date": "Friday",
+    "time": "11:59 PM",
+    "deadline": "Friday"
+  },
+  "actions": [
+    {
+      "type": "create_task",
+      "label": "Review 3 — submit by Friday 11:59 PM",
+      "payload": {}
+    },
+    {
+      "type": "set_reminder",
+      "label": "Set a reminder before the deadline",
+      "payload": {}
+    }
+  ]
+}
