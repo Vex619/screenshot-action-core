@@ -23,11 +23,11 @@ if BaseModel is not object:
         """Create the FastAPI application."""
         from .analyzer import analyze_text
 
-        app = FastAPI(title="Screenshot → Action Core", version="0.2.0")
+        app = FastAPI(title="Screenshot → Action Core", version="0.2.1")
 
         @app.get("/health")
         def health() -> dict[str, str]:
-            return {"status": "ok", "version": "0.2.0"}
+            return {"status": "ok", "version": "0.2.1"}
 
         @app.post("/analyze/text")
         def analyze(payload: TextRequest) -> dict:

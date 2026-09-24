@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented here.
 
+## [0.2.1] - 2026-09-24
+
+### Improved
+
+- CI now validates Python 3.10 through 3.14.
+- CI installs and tests the optional API stack instead of skipping the API test.
+- CI runs the synthetic evaluation harness and package build.
+- Release publishing is automated from version tags.
+- Added the `py.typed` marker for downstream type checkers.
+
 ## [0.2.0] - 2026-09-24
 
 ### Added
