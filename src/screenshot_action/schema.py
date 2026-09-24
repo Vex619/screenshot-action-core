@@ -25,6 +25,7 @@ class ActionResult:
     entities: dict[str, str]
     actions: list[Action]
     source_text: str
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

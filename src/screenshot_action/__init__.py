@@ -1,7 +1,7 @@
 """Screenshot → Action Core."""
 
 from .analyzer import analyze_text
-from .schema import ActionResult
+from .schema import Action, ActionResult
 
-__all__ = ["ActionResult", "analyze_text"]
-__version__ = "0.1.0"
+__all__ = ["Action", "ActionResult", "analyze_text"]
+__version__ = "0.2.0"

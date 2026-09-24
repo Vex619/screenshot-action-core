@@ -1,0 +1,8 @@
+{"id":"assignment-1","text":"Assignment 3 — submit by Friday 11:59 PM","expected_type":"assignment","expected_entities":["date","time","deadline"]}
+{"id":"event-1","text":"Seminar tomorrow at 18:30 in CRC 101","expected_type":"event","expected_entities":["date","time"]}
+{"id":"travel-1","text":"Flight AI 102 departs tomorrow at 18:30 from Gate 4","expected_type":"travel","expected_entities":["flight","date","time"]}
+{"id":"receipt-1","text":"Receipt\nTotal ₹1,499.00\nAmount paid","expected_type":"receipt","expected_entities":["amount"]}
+{"id":"job-1","text":"Interview for Software Engineer position on 2026-10-02","expected_type":"job","expected_entities":["date"]}
+{"id":"recipe-1","text":"Recipe: pasta with garlic, olive oil and tomatoes. Cook 10 minutes.","expected_type":"recipe","expected_entities":[]}
+{"id":"address-1","text":"Address: 12 Anna Salai, Chennai 600002","expected_type":"address","expected_entities":["address"]}
+{"id":"generic-1","text":"Remember to call the lab tomorrow","expected_type":"generic","expected_entities":["date"]}

@@ -12,8 +12,8 @@ from pathlib import Path
 
 def extract_text_from_image(path: str | Path) -> str:
     try:
-        from PIL import Image
         import pytesseract
+        from PIL import Image
     except ImportError as exc:
         raise RuntimeError("OCR support requires the 'ocr' extra: pip install -e '.[ocr]'") from exc
 

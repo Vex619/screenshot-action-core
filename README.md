@@ -2,131 +2,170 @@
 
 **Turn screenshots into structured information and actionable next steps.**
 
-Screenshot → Action Core is a small, privacy-conscious Python toolkit for extracting useful structure from screenshots such as assignments, events, receipts, flights, job posts, recipes, addresses, and messages.
+Screenshot → Action Core is a provider-agnostic Python toolkit for turning extracted screenshot
+content into a stable JSON representation of **what the content is, what was found, and what could
+be done next**.
 
 > **Screenshot anything. Know what to do next.**
 
-## Why this exists
+## What it does
 
-Screenshots are an unstructured inbox. The useful information is usually a deadline, amount, place, contact, event, or next action. This project provides a deterministic, testable pipeline that turns extracted text into a normalized action-oriented result.
+The core pipeline is deliberately small:
+
+```text
+Image / text
+     ↓
+Extraction (optional OCR / vision adapter)
+     ↓
+Normalization
+     ↓
+Intent + entity detection
+     ↓
+Action planning
+     ↓
+Stable JSON
+     ↓
+Human approval / integration
+```
+
+Current deterministic categories include assignments, events, travel, receipts, jobs, recipes,
+addresses, and generic reminders.
 
 ## Quick start
 
 ```bash
-pip install -e .
+python -m pip install -e .
 
-screenshot-action text "Assignment due Friday at 11:59 PM"
-screenshot-action text "Flight AI 102 departs Chennai at 18:30 on October 2"
-screenshot-action text "Buy 2 items for ₹1,499"
+screenshot-action text "Assignment 3 — submit by Friday 11:59 PM" --pretty
 ```
 
-The CLI emits JSON by default, making the output easy to pipe into other tools.
+Relative dates can be normalized with an explicit reference date:
 
-## Example
-
-Input:
-
-```text
-Assignment 3 — submit by Friday 11:59 PM
+```bash
+screenshot-action text "Appointment tomorrow at 7 PM" \\
+  --reference-date 2026-09-24 --pretty
 ```
 
-Output:
+Example output:
 
 ```json
 {
-  "type": "assignment",
-  "confidence": 0.92,
-  "title": "Assignment 3",
+  "type": "event",
+  "confidence": 0.86,
+  "title": "Appointment tomorrow at 7 PM",
   "entities": {
-    "deadline": "Friday 11:59 PM"
+    "date": "tomorrow",
+    "date_iso": "2026-09-25",
+    "time": "7 PM"
   },
   "actions": [
     {
       "type": "create_task",
-      "label": "Complete Assignment 3"
+      "label": "Review Appointment tomorrow at 7 PM",
+      "payload": {}
     },
     {
       "type": "set_reminder",
-      "label": "Remind me before the deadline"
+      "label": "Set a reminder before the deadline",
+      "payload": {
+        "date": "2026-09-25",
+        "time": "7 PM"
+      }
     }
   ]
 }
 ```
 
-## Architecture
+## Image input
 
-```text
-Image / text
-    │
-    ▼
-Extraction layer ── optional OCR adapter
-    │
-    ▼
-Normalization
-    │
-    ▼
-Intent + entity detection
-    │
-    ▼
-Action planner
-    │
-    ▼
-Stable JSON schema
+Local OCR is optional:
+
+```bash
+python -m pip install -e '.[ocr]'
+screenshot-action image ./screenshot.png --pretty
 ```
 
-The core package intentionally keeps extraction and reasoning separate. That makes it possible to plug in Tesseract, a local vision model, or a hosted multimodal model without changing the downstream schema.
+The host also needs Tesseract installed. The OCR adapter is intentionally replaceable with a
+vision-model adapter later.
 
-## Supported categories
+## Python API
 
-The initial rules recognize common signals for:
+```python
+from screenshot_action import analyze_text
 
-- assignments / tasks
-- events / appointments
-- travel / flights
-- receipts / purchases
-- jobs / applications
-- recipes
-- addresses / locations
-- generic reminders
+result = analyze_text("Assignment due tomorrow at 8 PM")
+print(result.to_dict())
+```
 
-This is a foundation, not a claim that every screenshot can be perfectly understood.
+## Optional API
+
+```bash
+python -m pip install -e '.[api]'
+uvicorn screenshot_action.api:app --reload
+```
+
+Then:
+
+```bash
+curl http://127.0.0.1:8000/health
+curl -X POST http://127.0.0.1:8000/analyze/text \\
+  -H 'content-type: application/json' \\
+  -d '{"text":"Flight AI 102 departs tomorrow at 18:30","reference_date":"2026-09-24"}'
+```
 
 ## Design principles
 
 - **Local-first:** the core text pipeline has no network dependency.
-- **Provider-agnostic:** OCR and vision models are adapters, not hard-coded requirements.
-- **Structured output:** downstream automations consume a stable schema rather than free-form prose.
-- **Human-in-the-loop:** actions are proposed, not silently executed.
-- **Testable:** classification and extraction logic are deterministic and unit-tested.
+- **Provider-agnostic:** OCR, vision models, and hosted APIs are adapters.
+- **Structured output:** downstream systems consume a stable schema instead of free-form prose.
+- **Human-in-the-loop:** the core proposes actions; it does not silently execute them.
+- **Deterministic and testable:** extraction logic can be regression-tested without a model API.
+- **Privacy-conscious:** fixtures are synthetic and the core does not upload screenshot content.
 
 ## Development
 
 ```bash
 python -m pip install -e '.[dev]'
-pytest
-ruff check .
+python -m pytest -q
+python scripts_evaluate.py
+```
+
+See [docs/architecture.md](docs/architecture.md) and [docs/evaluation.md](docs/evaluation.md).
+
+## Project layout
+
+```text
+src/screenshot_action/     core library, CLI, OCR adapter, optional API
+tests/                     regression tests
+evaluation/                synthetic evaluation cases
+docs/                      architecture + evaluation notes
+.github/                   CI + issue/PR templates
 ```
 
 ## Roadmap
 
 - [x] Stable action schema
-- [x] CLI text analyzer
-- [x] Deterministic intent/entity extraction
-- [x] Unit tests and CI
-- [ ] OCR adapter
-- [ ] FastAPI service
+- [x] Deterministic analyzer
+- [x] CLI for text, file, and image input
+- [x] Optional local OCR adapter
+- [x] Relative/absolute date normalization
+- [x] Optional FastAPI service
+- [x] Synthetic evaluation harness
 - [ ] Vision-model adapter interface
-- [ ] Evaluation dataset and benchmark harness
-- [ ] Calendar / task integrations as opt-in adapters
+- [ ] Confidence calibration and provenance metadata
+- [ ] Multimodal evaluation corpus
+- [ ] Opt-in calendar/task/map integrations
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Please keep provider-specific code behind adapters and add tests for new extraction behavior.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Keep provider-specific integrations behind adapters and
+add regression tests for behavior changes.
 
 ## Security
 
-Please see [SECURITY.md](SECURITY.md) for vulnerability reporting. Do not commit screenshots containing credentials, financial account numbers, authentication codes, or other sensitive information.
+See [SECURITY.md](SECURITY.md). Never commit credentials, authentication codes, financial account
+numbers, or private screenshots.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT.

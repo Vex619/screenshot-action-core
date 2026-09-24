@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "screenshot-action-core"
-version = "0.1.0"
-description = "Turn screenshot text into structured, actionable data."
+version = "0.2.0"
+description = "Turn screenshot content into structured, actionable data."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -21,9 +21,13 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "ruff>=0.9"]
+dev = ["pytest>=8.0", "ruff>=0.9", "build>=1.2"]
 ocr = ["Pillow>=10.0", "pytesseract>=0.3.13"]
-api = ["fastapi>=0.115", "uvicorn>=0.34"]
+api = [
+    "fastapi>=0.115",
+    "uvicorn>=0.34",
+    "httpx2>=2.0",
+]
 
 [project.scripts]
 screenshot-action = "screenshot_action.cli:main"
@@ -36,5 +40,4 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-
 target-version = "py310"
