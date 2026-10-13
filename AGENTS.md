@@ -10,6 +10,7 @@ Build a provider-agnostic, testable pipeline that converts screenshot content in
 - Keep core logic deterministic and network-free.
 - Put OCR, vision models, hosted APIs, and integrations behind explicit adapters.
 - Never execute actions from the core analyzer.
+- The package version lives only in `src/screenshot_action/_version.py`; do not hard-code it elsewhere.
 - Add regression tests for extraction/classification behavior.
 - Do not add real personal data or credentials to fixtures.
 - Prefer small, composable modules over a monolithic analyzer.

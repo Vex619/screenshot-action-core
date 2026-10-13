@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "screenshot-action-core"
-version = "0.2.1"
+dynamic = ["version"]
 description = "Turn screenshot content into structured, actionable data."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -17,8 +17,19 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
 ]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Vex619/screenshot-action-core"
+Issues = "https://github.com/Vex619/screenshot-action-core/issues"
+Changelog = "https://github.com/Vex619/screenshot-action-core/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "ruff>=0.9", "build>=1.2"]
@@ -32,11 +43,15 @@ api = [
 [project.scripts]
 screenshot-action = "screenshot_action.cli:main"
 
+[tool.hatch.version]
+path = "src/screenshot_action/_version.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/screenshot_action"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100

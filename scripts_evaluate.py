@@ -8,11 +8,14 @@ from pathlib import Path
 
 from screenshot_action import analyze_text
 
+CASES_PATH = Path(__file__).resolve().parent / "evaluation" / "cases.jsonl"
+
 
 def main() -> int:
-    path = Path("evaluation/cases.jsonl")
     total = passed = 0
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in CASES_PATH.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
         case = json.loads(line)
         total += 1
         result = analyze_text(case["text"], reference_date=date(2026, 9, 24))

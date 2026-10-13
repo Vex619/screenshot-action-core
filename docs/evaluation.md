@@ -15,3 +15,5 @@ code changes.
 
 The dataset is not a benchmark of general multimodal intelligence. It is a project-level
 regression suite for the deterministic analyzer.
+
+The same cases also run under `pytest` (`tests/test_evaluation.py`), one test per case.

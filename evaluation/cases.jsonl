@@ -6,3 +6,7 @@
 {"id":"recipe-1","text":"Recipe: pasta with garlic, olive oil and tomatoes. Cook 10 minutes.","expected_type":"recipe","expected_entities":[]}
 {"id":"address-1","text":"Address: 12 Anna Salai, Chennai 600002","expected_type":"address","expected_entities":["address"]}
 {"id":"generic-1","text":"Remember to call the lab tomorrow","expected_type":"generic","expected_entities":["date"]}
+{"id":"tonight-1","text":"Dinner tonight at 8 PM","expected_type":"generic","expected_entities":["date","date_iso","time"]}
+{"id":"receipt-2","text":"Invoice\nSubtotal Rs. 1,200\nTax Rs. 216\nTotal Rs. 1,416","expected_type":"receipt","expected_entities":["amount"]}
+{"id":"job-2","text":"Apply by 2026-10-15 for the Quant Intern position","expected_type":"job","expected_entities":["date","date_iso","deadline"]}
+{"id":"address-2","text":"Pickup at 221 Baker Street, London","expected_type":"address","expected_entities":["address"]}

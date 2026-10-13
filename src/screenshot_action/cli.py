@@ -5,9 +5,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from datetime import date
 from pathlib import Path
+from typing import Any
 
+from ._version import __version__
 from .analyzer import analyze_text
 
 
@@ -16,6 +19,7 @@ def _parser() -> argparse.ArgumentParser:
         prog="screenshot-action",
         description="Turn screenshot content into structured actions.",
     )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     def add_common(command: argparse.ArgumentParser) -> None:
@@ -45,8 +49,17 @@ def _reference_date(value: str | None) -> date | None:
         raise ValueError("--reference-date must use YYYY-MM-DD") from exc
 
 
-def main() -> int:
-    args = _parser().parse_args()
+def _emit(result: dict[str, Any], *, pretty: bool) -> None:
+    indent = 2 if pretty else None
+    try:
+        print(json.dumps(result, indent=indent, ensure_ascii=False))
+    except UnicodeEncodeError:
+        # stdout uses a legacy code page (e.g. a piped Windows console): emit escaped JSON.
+        print(json.dumps(result, indent=indent, ensure_ascii=True))
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    args = _parser().parse_args(argv)
     try:
         if args.command == "text":
             text = args.value
@@ -54,14 +67,15 @@ def main() -> int:
             text = args.path.read_text(encoding="utf-8")
         else:
             from .ocr import extract_text_from_image
+
             text = extract_text_from_image(args.path)
 
         result = analyze_text(text, reference_date=_reference_date(args.reference_date)).to_dict()
-        print(json.dumps(result, indent=2 if args.pretty else None, ensure_ascii=False))
-        return 0
     except (OSError, TypeError, ValueError, RuntimeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
+    _emit(result, pretty=args.pretty)
+    return 0
 
 
 if __name__ == "__main__":

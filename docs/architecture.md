@@ -18,7 +18,7 @@ between analysis and integrations.
 The service currently provides:
 
 - `GET /health`
-- `POST /analyze/text`
+- `POST /analyze/text` (HTTP 422 for blank text or an invalid `reference_date`)
 
 Image upload and vision-model adapters remain separate concerns so the core package stays small
 and dependency-free.

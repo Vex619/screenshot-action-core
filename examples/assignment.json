@@ -1,7 +1,7 @@
 {
   "type": "assignment",
   "confidence": 0.93,
-  "title": "3 — submit by Friday 11:59 PM",
+  "title": "Assignment 3 — submit by Friday 11:59 PM",
   "entities": {
     "date": "Friday",
     "time": "11:59 PM",
@@ -10,13 +10,24 @@
   "actions": [
     {
       "type": "create_task",
-      "label": "Review 3 — submit by Friday 11:59 PM",
+      "label": "Review Assignment 3 — submit by Friday 11:59 PM",
       "payload": {}
     },
     {
       "type": "set_reminder",
       "label": "Set a reminder before the deadline",
-      "payload": {}
+      "payload": {
+        "time": "11:59 PM"
+      }
     }
-  ]
+  ],
+  "source_text": "Assignment 3 — submit by Friday 11:59 PM",
+  "metadata": {
+    "analyzer": "deterministic",
+    "version": "0.2.2",
+    "matched_terms": {
+      "assignment": 2
+    },
+    "reference_date": null
+  }
 }

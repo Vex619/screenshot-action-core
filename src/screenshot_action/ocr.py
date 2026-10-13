@@ -20,4 +20,5 @@ def extract_text_from_image(path: str | Path) -> str:
     image_path = Path(path)
     if not image_path.is_file():
         raise FileNotFoundError(image_path)
-    return pytesseract.image_to_string(Image.open(image_path)).strip()
+    with Image.open(image_path) as image:
+        return pytesseract.image_to_string(image).strip()

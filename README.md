@@ -42,7 +42,7 @@ screenshot-action text "Assignment 3 — submit by Friday 11:59 PM" --pretty
 Relative dates can be normalized with an explicit reference date:
 
 ```bash
-screenshot-action text "Appointment tomorrow at 7 PM" \\
+screenshot-action text "Appointment tomorrow at 7 PM" \
   --reference-date 2026-09-24 --pretty
 ```
 
@@ -66,13 +66,22 @@ Example output:
     },
     {
       "type": "set_reminder",
-      "label": "Set a reminder before the deadline",
+      "label": "Set a reminder before the event",
       "payload": {
         "date": "2026-09-25",
         "time": "7 PM"
       }
     }
-  ]
+  ],
+  "source_text": "Appointment tomorrow at 7 PM",
+  "metadata": {
+    "analyzer": "deterministic",
+    "version": "0.2.2",
+    "matched_terms": {
+      "event": 1
+    },
+    "reference_date": "2026-09-24"
+  }
 }
 ```
 
@@ -108,10 +117,12 @@ Then:
 
 ```bash
 curl http://127.0.0.1:8000/health
-curl -X POST http://127.0.0.1:8000/analyze/text \\
-  -H 'content-type: application/json' \\
+curl -X POST http://127.0.0.1:8000/analyze/text \
+  -H 'content-type: application/json' \
   -d '{"text":"Flight AI 102 departs tomorrow at 18:30","reference_date":"2026-09-24"}'
 ```
+
+Blank text or an invalid `reference_date` returns HTTP 422 with an explanation.
 
 ## Design principles
 
@@ -138,6 +149,8 @@ See [docs/architecture.md](docs/architecture.md) and [docs/evaluation.md](docs/e
 src/screenshot_action/     core library, CLI, OCR adapter, optional API
 tests/                     regression tests
 evaluation/                synthetic evaluation cases
+examples/                  synthetic example output
+scripts_evaluate.py        dependency-free evaluation runner
 docs/                      architecture + evaluation notes
 .github/                   CI + issue/PR templates
 ```
